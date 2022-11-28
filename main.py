@@ -1,5 +1,4 @@
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+# Here we test the implementation of the modules of this repostiory...
 import numpy as np
 from axis_representation_utils import *
 from quaternion_utils.q_utils import *
