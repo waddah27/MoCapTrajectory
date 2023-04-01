@@ -1,7 +1,9 @@
 import c3d
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+from IPython.display import display
 import os
 PATH_TO_DATA = 'Data'
 
@@ -18,6 +20,10 @@ def read_c3d(path):
     analog_arr = np.array(analog_list)
     return points_arr, analog_arr
 
+def read_csv_data(path):
+    data = pd.read_csv(path)
+    # The data records for the pig in hole tool to estimate its location
+    PIH_data = data.iloc[:, :8] # rotation around (X, Y, Z) + Postition (X, Y, Z)
 
 def get_trajectory(points: np.array):
     num_frames = len(points)
