@@ -6,7 +6,11 @@ from mpl_toolkits.mplot3d import Axes3D
 from IPython.display import display
 import os
 PATH_TO_DATA = 'Data'
-
+PATH_TO_RECORDED_DATA = os.path.join(PATH_TO_DATA, 'human arm tracks')
+print(f'path to recorded data = {PATH_TO_RECORDED_DATA}')
+# Get the csv records only
+records = [f for f in sorted(os.listdir(PATH_TO_RECORDED_DATA)) if f.endswith('.csv')]
+print(f'recorded list = {records}')
 
 def read_c3d(path):
     reader = c3d.Reader(open(path, 'rb'))
@@ -20,10 +24,11 @@ def read_c3d(path):
     analog_arr = np.array(analog_list)
     return points_arr, analog_arr
 
-def read_csv_data(path):
+def read_csv_rigid_data(path):
     data = pd.read_csv(path)
     # The data records for the pig in hole tool to estimate its location
     PIH_data = data.iloc[:, :8] # rotation around (X, Y, Z) + Postition (X, Y, Z)
+    return PIH_data
 
 def get_trajectory(points: np.array):
     num_frames = len(points)
@@ -70,5 +75,11 @@ points, analogs = read_c3d(path)
 print(points.shape)
 X, Y, Z = get_trajectory(points)
 joint = 0
-plot_motion(X[joint], Y[joint], Z[joint])
+# plot_motion(X[joint], Y[joint], Z[joint])
+
+data = read_csv_rigid_data(os.path.join(PATH_TO_RECORDED_DATA,records[-1]))
+for col in data:
+    data[col] = pd.to_numeric(data[col], errors='coerce')
+# data = data.interpolate(inplace=True)
+display(data)
 
