@@ -24,11 +24,26 @@ def read_c3d(path):
     analog_arr = np.array(analog_list)
     return points_arr, analog_arr
 
-def read_csv_rigid_data(path):
+def read_and_preprocess_csv_data(path, start_col = 0, end_col = -1):
+    '''
+    This Function reads the data from csv file,
+    convert strings to numeric and does forward
+    and backward linear interpolation to fill the NaNs
+        :param path: the path to csv file
+        :param start_col: idx of the data's 1st col needed (to take a slice)
+        :param end_col: idx of the data's final col needed (to take a slice)
+        :return data: the csv dataframe after doing the abovementioned preprocessing
+        '''
     data = pd.read_csv(path)
-    # The data records for the pig in hole tool to estimate its location
-    PIH_data = data.iloc[:, :8] # rotation around (X, Y, Z) + Postition (X, Y, Z)
-    return PIH_data
+    Clean_data = data.iloc[:, start_col:end_col] # rotation around (X, Y, Z) + Postition (X, Y, Z)
+    
+    # Convert strings to numeric
+    for col in Clean_data:
+        Clean_data[col] = pd.to_numeric(Clean_data[col], errors='coerce')
+    
+    # Used forward and backward linear interpolation for filling nan values
+    Clean_data.interpolate(method='linear', limit_direction='both', inplace=True)
+    return Clean_data
 
 def get_trajectory(points: np.array):
     num_frames = len(points)
@@ -77,7 +92,7 @@ X, Y, Z = get_trajectory(points)
 joint = 0
 # plot_motion(X[joint], Y[joint], Z[joint])
 
-data = read_csv_rigid_data(os.path.join(PATH_TO_RECORDED_DATA,records[-1]))
+data = read_and_preprocess_csv_data(os.path.join(PATH_TO_RECORDED_DATA,records[-1]))
 for col in data:
     data[col] = pd.to_numeric(data[col], errors='coerce')
 # data = data.interpolate(inplace=True)
