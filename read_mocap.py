@@ -24,7 +24,7 @@ def read_c3d(path):
     analog_arr = np.array(analog_list)
     return points_arr, analog_arr
 
-def read_and_preprocess_csv_data(path, start_col = 0, end_col = -1):
+def read_and_preprocess_csv_data(path, start_col = 0, end_col = None):
     '''
     This Function reads the data from csv file,
     convert strings to numeric and does forward
@@ -35,8 +35,10 @@ def read_and_preprocess_csv_data(path, start_col = 0, end_col = -1):
         :return data: the csv dataframe after doing the abovementioned preprocessing
         '''
     data = pd.read_csv(path)
-    Clean_data = data.iloc[:, start_col:end_col] # rotation around (X, Y, Z) + Postition (X, Y, Z)
-    
+    if end_col is not None:
+        Clean_data = data.iloc[:, start_col:end_col] # rotation around (X, Y, Z) + Postition (X, Y, Z)
+    else:
+        Clean_data = data.iloc[:, start_col:]
     # Convert strings to numeric
     for col in Clean_data:
         Clean_data[col] = pd.to_numeric(Clean_data[col], errors='coerce')
