@@ -3,7 +3,7 @@
 import torch
 import torch.nn.functional as F
 import torch.nn as nn
-
+import numpy as np
 #num_landmark = 543
 max_length = 80
 num_class  = 250
