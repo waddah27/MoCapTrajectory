@@ -2,7 +2,14 @@ import torch
 from torch import Tensor
 import torch.nn.functional as f
 from torch import nn
+
+
 def scaled_dot_product_attention(query: Tensor, key: Tensor, value: Tensor) -> Tensor:
+    '''
+    Q, K, and V (query, key, and value arrays) are batches of matrices, 
+    each with shape (batch_size, sequence_length, num_features). 
+    Batch matrix multiplication is only performed over the last two dimensions.
+    '''
     attention = query.bmm(key.transpose(1,2))
     scale = query.size(-1) ** 0.5
     softmax = f.softmax(attention / scale, dim=-1)
