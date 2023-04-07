@@ -1,12 +1,14 @@
 import torch
 import math
 from torch import nn, Tensor
+from Transformer_utils.common_utils import CFG
 
+cfg = CFG()
 class PositionalEncoder(nn.Module):
     def __init__(self,
-                 dropout: float = 0.1,
-                 max_seq_len: int = 5000,
-                 d_model: int = 512,
+                 dropout: float = cfg.dropout, # 0.1
+                 max_seq_len: int = cfg.max_seq_len, # 5000
+                 d_model: int = cfg.dim_model, # 512
                  batch_first: bool = False) -> None:
         """
         parameters:

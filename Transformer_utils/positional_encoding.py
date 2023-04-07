@@ -6,12 +6,22 @@ def positional_encoding(seq_len:int, dim_model: int, device: torch.device = torc
     '''
     We have to provide positional information to the model, 
     so that it knows about the relative position of data points in the input sequences.
+    Mathimatically:
+        P(K, 2i) = sin(K/n^(2i/d))
+        P(K, 2i+1) = cos(K/n^(2i/d))
+        Where:
+            K: is the index of the object in the sequence to get the positional encoding of.
+            P(K,j) is the function for mapping the Kth obj's pos to idx (K,j) of the positional matrix
+            d: dimension of the output embedding space (here we set to 512)
+            i: used for mapping to column indices of positional matrix (0<=i<d/2 -> i = [0, ..., d//2 -1])
+            n: a User defined scalar set to 1e4 (10000) by paper (Attention Is All You Need)
     :param seq_len: length of the sequence
     :param dim_model: dimentions of the model
     :param device: the device on which the transformer will be trained
     :return Tensor 
     '''
-    pos = torch.arange(seq_len, dtype=torch.float32, device=device).reshape(1, -1, 1)
-    dim = torch.arange(dim_model, dtype=torch.float32, device=device).reshape(1, 1, -1)
-    phase = pos / (1e4 **(dim / dim_model))
-    return torch.where(dim.long() %2 ==0, torch.sin(phase), torch.cos(phase))
+
+    K = torch.arange(seq_len, dtype=torch.float32, device=device).reshape(1, -1, 1) # K
+    j = torch.arange(dim_model, dtype=torch.float32, device=device).reshape(1, 1, -1) #i indices vector
+    phase = K / (1e4 **(j / dim_model))
+    return torch.where(j.long() %2 ==0, torch.sin(phase), torch.cos(phase)) # dim.long() == indices of the j vector
