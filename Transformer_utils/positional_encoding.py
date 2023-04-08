@@ -23,5 +23,13 @@ def positional_encoding(seq_len:int, dim_model: int, device: torch.device = torc
 
     K = torch.arange(seq_len, dtype=torch.float32, device=device).reshape(1, -1, 1) # K
     j = torch.arange(dim_model, dtype=torch.float32, device=device).reshape(1, 1, -1) #i indices vector
-    phase = K / (1e4 **(j / dim_model))
-    return torch.where(j.long() %2 ==0, torch.sin(phase), torch.cos(phase)) # dim.long() == indices of the j vector
+    i = torch.where(j.long()%2==0, j[-1]//2, (j[-1]-1)/2)
+    
+    phase = K / (1e4 **(2*i / dim_model))
+    # dim.long() == indices of the j vector
+    return torch.where(j.long() %2 ==0, torch.sin(phase), torch.cos(phase))
+
+if __name__=='__main__':
+    # for debugging
+    p = positional_encoding(seq_len=4,dim_model=6)
+    print(p)
