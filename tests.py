@@ -1,4 +1,8 @@
-a = [i for i in range(30)]
-print(len(a))
-for i,e in enumerate(a):
-    print(i, e[i])
+from TimeSeriesTransformer.TimeSeriesTransformer import TimeSeriesTransformer
+import torch
+if __name__=='__main__':
+    
+    src = torch.rand(64, 32, 512)
+    tgt = torch.rand(64, 16, 512)
+    out = TimeSeriesTransformer()(src, tgt)
+    print(out.shape)

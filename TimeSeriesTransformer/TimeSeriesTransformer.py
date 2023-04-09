@@ -160,4 +160,3 @@ class TimeSeriesTransformer(nn.Module):
     
     def forward(self, src:Tensor, target:Tensor)->Tensor:
         return self.decoder(target, self.encoder(src))
-
