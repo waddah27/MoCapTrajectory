@@ -1,7 +1,7 @@
 import torch
 from Transformer_utils.feed_forward import feed_forward
 from Transformer_utils.MultiHeadAttention import MultiHeadAttention
-from Transformer_utils.positional_encoding import positional_encoding
+from Transformer_utils.positional_encoding import PositionalEncoder
 from Transformer_utils.regularization_notmalization import Residual
 from Transformer_utils.common_utils import CFG
 from torch import nn, Tensor
@@ -58,7 +58,7 @@ class TransformerEncoder(nn.Module):
 
     def forward(self, src:Tensor)-> Tensor:
         seq_len, dimension = src.size(1), src.size(2)
-        src+=positional_encoding(seq_len=seq_len, dim_model=dimension)
+        src+=PositionalEncoder(seq_len=seq_len, dim_model=dimension)(src)
         for layer in self.layers:
             src = layer(src)
         return src
@@ -127,7 +127,7 @@ class TransformerDecoder(nn.Module):
         self.Linear = nn.Linear(dim_model, dim_model)
     def forward(self, target:Tensor, memory:Tensor)->Tensor:
         seq_len, dimension = target.size(1), target.size(2)
-        target+=positional_encoding(seq_len=seq_len, dim_model=dimension)
+        target+=PositionalEncoder(seq_len=seq_len, dim_model=dimension)(target)
         for layer in self.layers:
             target = layer(target, memory)
         return torch.softmax(self.Linear(target), dim=-1)
