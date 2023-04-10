@@ -29,16 +29,21 @@ class PositionalEncoder(nn.Module):
         self.seq_len = seq_len
         self.dim_model = dim_model
         self.device = device
-    def positional_encoding(self)->Tensor:#, seq_len:int , dim_model: int, device: torch.device = torch.device('cpu')) -> Tensor:
-        K = torch.arange(self.seq_len, dtype=torch.float32, device=self.device).reshape(1, -1, 1) # K
-        j = torch.arange(self.dim_model, dtype=torch.float32, device=self.device).reshape(1, 1, -1) #i indices vector
+        pe = self.positional_encoding(self.seq_len, self.dim_model)
+        # pe = pe.reshape(pe.shape[1], pe.shape[2])
+        # self.position_embedding_layer = nn.Embedding(num_embeddings=self.seq_len,
+        #                                              embedding_dim=self.dim_model, 
+        #                                               _weight=pe)
+    def positional_encoding(self, seq_len, dim_model)->Tensor:
+        K = torch.arange(seq_len, dtype=torch.float32, device=self.device).reshape(1, -1, 1) # K
+        j = torch.arange(dim_model, dtype=torch.float32, device=self.device).reshape(1, 1, -1) #i indices vector
         i = torch.where(j.long()%2==0, j[-1]//2, (j[-1]-1)/2)
         
         phase = K / (1e4 **(2*i / self.dim_model))
         # dim.long() == indices of the j vector
         return torch.where(j.long() %2 ==0, torch.sin(phase), torch.cos(phase))
     def forward(self, x):
-        pe = self.positional_encoding()
+        pe = self.positional_encoding(self.seq_len, self.dim_model)
         x = x + pe
         return x 
 
