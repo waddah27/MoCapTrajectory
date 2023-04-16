@@ -6,10 +6,18 @@ from Transformer_utils.positional_encoding import PositionalEncoder
 
 
 if __name__=='__main__':
+    layer = torch.nn.Linear(9, 512)
+    norm = nn.LayerNorm(512)
+    Dropout = nn.Dropout()
+    # layer2 = torch.nn.Linear(512, 2024)
     
-    src = torch.rand(64, 32, 512)
-    tgt = torch.rand(64, 16, 512)
-    out = TimeSeriesTransformer()(src, tgt)
+    src = torch.rand(64, 32, 9)
+    tgt = torch.rand(64, 16, 9)
+    normed = src[0]
+    droped = Dropout(layer(src))
+    # b = norm(src[0] + Dropout(layer(src)))
+    model = TimeSeriesTransformer()
+    out = model(src, tgt)
     print(out.shape)
     pe = PositionalEncoder(seq_len=100, dim_model=512)(torch.LongTensor([0]))
     print(f'pe shape = {pe.shape}')

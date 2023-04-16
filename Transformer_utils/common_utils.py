@@ -1,7 +1,7 @@
 class CFG:
     def __init__(
             self,
-            dim_model:int = 512,
+            dim_model:int = 9, #512,
             dim_feedforward:int = 2048,
             n_heads:int = 8,
             n_encoder_layers:int = 6,
