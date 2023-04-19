@@ -98,5 +98,5 @@ data = read_and_preprocess_csv_data(os.path.join(PATH_TO_RECORDED_DATA,records[-
 for col in data:
     data[col] = pd.to_numeric(data[col], errors='coerce')
 # data = data.interpolate(inplace=True)
-display(data)
+#display(data)
 

@@ -1,11 +1,23 @@
+import os
 import torch
 import matplotlib.pyplot  as plt
 import torch.nn as nn
 from TimeSeriesTransformer.TimeSeriesTransformer import TimeSeriesTransformer
 from Transformer_utils.positional_encoding import PositionalEncoder
+from PrepareData.dataset import TransformerDataset
 
+from read_mocap import PATH_TO_DATA, PATH_TO_RECORDED_DATA, read_and_preprocess_csv_data
 
 if __name__=='__main__':
+    # Test reading dataset from costum class
+    print(f'path to recorded data = {PATH_TO_RECORDED_DATA}')
+    # Get the csv records only
+    records = [f for f in sorted(os.listdir(PATH_TO_RECORDED_DATA)) if f.endswith('.csv')]
+    print(f'recorded list = {records}')
+    Data = TransformerDataset(os.path.join(PATH_TO_RECORDED_DATA,records[-1]), src_target_split=0.7, start_col=10)
+    src, trg, trg_y = Data.get_src_trg()
+    
+    
     layer = torch.nn.Linear(9, 512)
     norm = nn.LayerNorm(512)
     Dropout = nn.Dropout()
