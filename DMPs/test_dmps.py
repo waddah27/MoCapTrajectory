@@ -8,5 +8,7 @@ from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 
-sys.path.append("../")
-from dmpling.dmp import DMP
+# sys.path.append("../")
+from dmpling.dmpling.dmp import DMP
+
+print('Done')
