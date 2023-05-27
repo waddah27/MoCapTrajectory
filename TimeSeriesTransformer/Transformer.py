@@ -134,7 +134,7 @@ class TransformerDecoder(nn.Module):
     
 
 
-class TimeSeriesTransformer(nn.Module):
+class Transformer(nn.Module):
     def __init__(self,
                  n_encoder_layers:int = cfg.n_encoder_layers,
                  n_decoder_layers: int = cfg.n_decoder_layers,
