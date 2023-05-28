@@ -9,6 +9,6 @@ import matplotlib.pyplot as plt
 from scipy.signal import savgol_filter
 
 # sys.path.append("../")
-from dmpling.dmpling.dmp import DMP
+# from dmpling.dmpling.dmp import DMP
 
 print('Done')
