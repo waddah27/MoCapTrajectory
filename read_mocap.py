@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 from IPython.display import display
 import os
-PATH_TO_DATA = 'Data'
-PATH_TO_RECORDED_DATA = os.path.join(PATH_TO_DATA, 'human arm tracks')
+PATH_TO_DATA = 'MoCapTrajectory/Data'
+PATH_TO_RECORDED_DATA = os.path.join(PATH_TO_DATA, 'human_arm_tracks')
 print(f'path to recorded data = {PATH_TO_RECORDED_DATA}')
 # Get the csv records only
 records = [f for f in sorted(os.listdir(PATH_TO_RECORDED_DATA)) if f.endswith('.csv')]
@@ -83,20 +83,20 @@ def plot_scatter(X, Y, Z):
 
 
 
-motion_class = sorted(os.listdir(PATH_TO_DATA))
-print(motion_class)
-path_to_motion_class_data = PATH_TO_DATA + f'/{motion_class[6]}'
-data_list = os.listdir(path_to_motion_class_data)
-path = path_to_motion_class_data+f'/{data_list[1]}'
-points, analogs = read_c3d(path)
-print(points.shape)
-X, Y, Z = get_trajectory(points)
-joint = 0
-# plot_motion(X[joint], Y[joint], Z[joint])
+# motion_class = sorted(os.listdir(PATH_TO_DATA))
+# print(motion_class)
+# path_to_motion_class_data = PATH_TO_DATA + f'/{motion_class[6]}'
+# data_list = os.listdir(path_to_motion_class_data)
+# path = path_to_motion_class_data+f'/{data_list[1]}'
+# points, analogs = read_c3d(path)
+# print(points.shape)
+# X, Y, Z = get_trajectory(points)
+# joint = 0
+# # plot_motion(X[joint], Y[joint], Z[joint])
 
-data = read_and_preprocess_csv_data(os.path.join(PATH_TO_RECORDED_DATA,records[-1]))
-for col in data:
-    data[col] = pd.to_numeric(data[col], errors='coerce')
-# data = data.interpolate(inplace=True)
-#display(data)
+# data = read_and_preprocess_csv_data(os.path.join(PATH_TO_RECORDED_DATA,records[-1]))
+# for col in data:
+#     data[col] = pd.to_numeric(data[col], errors='coerce')
+# # data = data.interpolate(inplace=True)
+# #display(data)
 
