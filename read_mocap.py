@@ -81,22 +81,18 @@ def plot_motion(X, Y, Z):
 def plot_scatter(X, Y, Z):
     pass
 
-
-
-# motion_class = sorted(os.listdir(PATH_TO_DATA))
-# print(motion_class)
-# path_to_motion_class_data = PATH_TO_DATA + f'/{motion_class[6]}'
-# data_list = os.listdir(path_to_motion_class_data)
-# path = path_to_motion_class_data+f'/{data_list[1]}'
-# points, analogs = read_c3d(path)
-# print(points.shape)
-# X, Y, Z = get_trajectory(points)
-# joint = 0
-# # plot_motion(X[joint], Y[joint], Z[joint])
-
-# data = read_and_preprocess_csv_data(os.path.join(PATH_TO_RECORDED_DATA,records[-1]))
-# for col in data:
-#     data[col] = pd.to_numeric(data[col], errors='coerce')
-# # data = data.interpolate(inplace=True)
-# #display(data)
+def calc_dist_feature(df):
+    '''
+    This function takes the data frame as input where we have coordinates
+    for target (pih_data[x,y,z]) and wrist (human arm end point) wirst[x,y,z]
+    returns the distance between the human arm and the target tool.
+    '''
+    wrst_vec = df.loc[:,['arm:wrist_X_Position','arm:wrist_Y_Position', 'arm:wrist_Z_Position']].to_numpy()
+    pih_vec = df.loc[:,['PIH_X_Position', 'PIH_Y_Position','PIH_Z_Position']].to_numpy()
+    distance = np.array([])
+    for wrst_pt, pih_pt in zip(wrst_vec, pih_vec):
+        # if wrst_pt is not None and pih_pt is not None:
+        dist =  np.linalg.norm(wrst_pt - pih_pt)
+        distance = np.append(distance,dist)
+    return distance
 

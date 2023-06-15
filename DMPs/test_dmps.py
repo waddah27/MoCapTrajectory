@@ -2,7 +2,9 @@ import sys
 import os
 import matplotlib.pyplot as plt
 import numpy as np
-import numpy as np
+
+import pandas as pd
+import plotly.express as px
 import c3d
 from IPython.display import display
 from mpl_toolkits.mplot3d import Axes3D
@@ -10,9 +12,12 @@ from mpl_toolkits.mplot3d import Axes3D
 from scipy.signal import savgol_filter
 
 # sys.path.append("../")
-from read_mocap import PATH_TO_DATA, PATH_TO_RECORDED_DATA, read_and_preprocess_csv_data
+# sys.path.append(os.path.dirname(os.path.realpath(__file__)))
+from read_mocap import PATH_TO_DATA, PATH_TO_RECORDED_DATA, read_and_preprocess_csv_data, calc_dist_feature
 
 from Dmpling.dmpling.dmp import DMP
+pd.options.plotting.backend = "plotly"
+
 
 # read Motion Capture data
 print(f'path to recorded data = {PATH_TO_RECORDED_DATA}')
@@ -30,20 +35,6 @@ wrst_vec = arm_data.loc[:,['arm:wrist_X_Position','arm:wrist_Y_Position', 'arm:w
 print("Wrist data : \n")
 display(wrst_vec)
 
-# reader = c3d.Reader(open('MoCapTrajectory/Dmpling/assets/moc_s01_a06_r01.c3d', 'rb'))
-# data = reader.read_frames()
-# data = list(data)
-
-# data = [data[i][1][:, 0:3] for i in range(np.int(np.ceil(len(data))))]
-# data = np.array(data)
-
-# # Sample and smooth
-# data = data[1000:1600]
-# data = np.concatenate((data, data, data))
-
-# data = savgol_filter(data, 401, 3, axis=0)
-# data = savgol_filter(data, 401, 3, axis=0)
-# data += 1000
 data = wrst_vec[1000:2000, :] # take a sample when the wrist reached the target and inserted the tool
 n_frames = data.shape[0]
 
@@ -128,4 +119,14 @@ plt.scatter([learned_x[-1]], [learned_y[-1]], c="r")
 plt.plot(learned_x, learned_y, c="k", linestyle="--")
 plt.show()
 
+dist = calc_dist_feature(all_data)
+print(min(dist))
+all_data['Distance'] = dist
+# display(all_data)
+print(all_data.columns)
+
+all_data_sample = all_data.loc[:, ['Frame', 'arm:wrist_X_Position', 'arm:wrist_Y_Position', 'arm:wrist_Z_Position', 'Distance']]#.plot()
+df_long=pd.melt(all_data_sample , id_vars=['Frame'])
+fig = px.line(df_long, x='Frame', y='value', color='variable')
+fig.show()
 print('Done')
